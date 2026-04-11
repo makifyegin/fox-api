@@ -7,3 +7,14 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+
+puts "Seeding countries..."
+
+ISO3166::Country.all.each do |iso_country|
+  Country.find_or_create_by!(code: iso_country.alpha2) do |country|
+    country.name = iso_country.common_name
+  end
+end
+
+puts "Created #{Country.count} countries"

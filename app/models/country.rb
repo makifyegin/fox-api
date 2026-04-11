@@ -1,4 +1,5 @@
 class Country < ApplicationRecord
+  has_many :regions, dependent: :destroy
   validates :name, presence: true
   validates :code, presence: true, uniqueness: true, length: { is: 2 }
   validate :code_must_be_valid_iso

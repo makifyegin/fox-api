@@ -18,3 +18,15 @@ ISO3166::Country.all.each do |iso_country|
 end
 
 puts "Created #{Country.count} countries"
+
+
+puts "Seeding regions..."
+
+uk = Country.find_by!(code: "GB")
+
+["London", "South East", "South West", "West Midlands", "East Midlands", "North West", "North East", "Yorkshire", "Scotland", "Wales", "Northern Ireland"].each do |region_name|
+  Region.find_or_create_by!(name: region_name, country: uk)
+end
+
+puts "Created #{Region.count} regions"
+

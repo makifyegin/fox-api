@@ -8,7 +8,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Routes will come here
-      resources :countries, only: [:index]
+      resources :countries, only: [:index], param: :code do
+        resources :regions, only: [:index]
+      end
     end
   end
   # Defines the root path route ("/")

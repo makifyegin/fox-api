@@ -8,8 +8,6 @@ While building a booking system for Servas International, I tried several open s
 
 So I decided to build it myself, truly open source, with no paid tiers or locked features. If you need a simple, honest booking system — use it, fork it, make it yours.
 
-
-
 ## What it does
 
 Servas operates globally with interviewers organised by country and region. When a new applicant joins, they need to book an interview with an available interviewer in their area. This API powers that booking flow:
@@ -27,6 +25,8 @@ Servas operates globally with interviewers organised by country and region. When
 - **Rails** 8.1.3 (API-only mode)
 - **PostgreSQL** 17 (via Docker)
 - **RSpec** for testing
+- **JWT** for authentication
+- **bcrypt** for password encryption
 
 ## Getting started
 
@@ -46,7 +46,6 @@ cd fox-api
 # Install dependencies
 bundle install
 
-# Start PostgreSQL in Docker
 # Start PostgreSQL in Docker
 docker run --name fox-db \
   -e POSTGRES_USER=your_username \
@@ -69,7 +68,7 @@ rails server
 
 ### Environment variables
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (see `.env.example`):
 
 ```
 DATABASE_USERNAME=your_username
@@ -81,27 +80,55 @@ DATABASE_PORT=5432
 ## Running tests
 
 ```bash
+# Run all tests
 rspec
+
+# Run a specific test file
+rspec spec/models/user_spec.rb
+
+# Run request specs only
+rspec spec/requests
 ```
 
 ## API endpoints
 
-### Countries
+### Public endpoints
 
 | Method | URL | Description |
 |--------|-----|-------------|
 | GET | `/api/v1/countries` | List all countries |
+| GET | `/api/v1/countries/:country_code/regions` | List regions for a country |
+| POST | `/api/v1/login` | Login and receive JWT token |
 
-### Regions
+### Protected endpoints (require JWT token)
 
 | Method | URL | Description |
 |--------|-----|-------------|
-| GET | `/api/v1/countries/:country_code/regions` | List regions for a country |
+| GET | `/api/v1/profile` | Get current user info |
 
-**Example:**
+### Authentication
+
+To access protected endpoints, include the JWT token in the Authorization header:
 
 ```bash
-curl http://localhost:3000/api/v1/countries/GB/regions
+# Login to get a token
+curl -X POST http://localhost:3000/api/v1/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "your_password"}'
+
+# Use the token for protected endpoints
+curl http://localhost:3000/api/v1/profile \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+## Data model
+
+```
+Country (249 ISO 3166 countries)
+  └── Region (e.g. London, Scotland)
+       └── User (interviewer or admin)
+            └── Availability (free time slots)
+                 └── Booking (applicant picks a slot)
 ```
 
 ## Project status
@@ -110,14 +137,16 @@ curl http://localhost:3000/api/v1/countries/GB/regions
 
 - [x] Country model with ISO 3166 codes
 - [x] Region model with country association
+- [x] User model with roles (admin/interviewer)
+- [x] JWT authentication (login, protected endpoints)
+- [x] Profile endpoint
 - [x] Countries API endpoint
 - [x] Regions API endpoint
-- [ ] User model (interviewer/admin roles)
-- [ ] Authentication
 - [ ] Interviewer availability
 - [ ] Booking system
 - [ ] Email verification for applicants
 - [ ] Waitlist
+- [ ] Rescheduling/cancellation
 - [ ] Jitsi video call integration
 
 ## Contributing

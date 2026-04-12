@@ -1,24 +1,129 @@
-# README
+# Fox API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A booking system API for [Servas International](https://servas.org), enabling new applicants to schedule interviews with regional interviewers.
 
-Things you may want to cover:
+## Why this project?
 
-* Ruby version
+While building a booking system for Servas International, I tried several open source scheduling tools. Every time, I hit the same wall — the features I needed were locked behind enterprise or paid editions. Open source shouldn't mean "free demo."
 
-* System dependencies
+So I decided to build it myself, truly open source, with no paid tiers or locked features. If you need a simple, honest booking system — use it, fork it, make it yours.
 
-* Configuration
 
-* Database creation
 
-* Database initialization
+## What it does
 
-* How to run the test suite
+Servas operates globally with interviewers organised by country and region. When a new applicant joins, they need to book an interview with an available interviewer in their area. This API powers that booking flow:
 
-* Services (job queues, cache servers, search engines, etc.)
+- Applicants visit a public page, see available slots in their region, and book an interview
+- Interviewers set their own availability and manage bookings
+- Admins manage countries, regions, and interviewer teams
+- Supports 15 or 30 minute interviews (video via Jitsi or in-person)
+- Email verification for applicants (no account required)
+- Waitlist when no slots are available
 
-* Deployment instructions
+## Tech stack
 
-* ...
+- **Ruby** 3.4.5
+- **Rails** 8.1.3 (API-only mode)
+- **PostgreSQL** 17 (via Docker)
+- **RSpec** for testing
+
+## Getting started
+
+### Prerequisites
+
+- Ruby 3.4.5
+- Bundler
+- Docker
+
+### Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/YOUR_USERNAME/fox-api.git
+cd fox-api
+
+# Install dependencies
+bundle install
+
+# Start PostgreSQL in Docker
+# Start PostgreSQL in Docker
+docker run --name fox-db \
+  -e POSTGRES_USER=your_username \
+  -e POSTGRES_PASSWORD=your_password \
+  -e POSTGRES_DB=fox_api_development \
+  -p 5432:5432 -d postgres:17
+
+# Create your environment file
+cp .env.example .env
+# Edit .env with your database credentials
+
+# Create and seed the database
+rails db:create
+rails db:migrate
+rails db:seed
+
+# Start the server
+rails server
+```
+
+### Environment variables
+
+Create a `.env` file in the project root:
+
+```
+DATABASE_USERNAME=your_username
+DATABASE_PASSWORD=your_password
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+```
+
+## Running tests
+
+```bash
+rspec
+```
+
+## API endpoints
+
+### Countries
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | `/api/v1/countries` | List all countries |
+
+### Regions
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | `/api/v1/countries/:country_code/regions` | List regions for a country |
+
+**Example:**
+
+```bash
+curl http://localhost:3000/api/v1/countries/GB/regions
+```
+
+## Project status
+
+🚧 Under active development
+
+- [x] Country model with ISO 3166 codes
+- [x] Region model with country association
+- [x] Countries API endpoint
+- [x] Regions API endpoint
+- [ ] User model (interviewer/admin roles)
+- [ ] Authentication
+- [ ] Interviewer availability
+- [ ] Booking system
+- [ ] Email verification for applicants
+- [ ] Waitlist
+- [ ] Jitsi video call integration
+
+## Contributing
+
+This is an open source project. Contributions are welcome! Please open an issue or submit a pull request.
+
+## Licence
+
+[MIT](LICENSE)

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Routes will come here
+      post "login", to: "auth#login"
       resources :countries, only: [:index], param: :code do
         resources :regions, only: [:index]
       end

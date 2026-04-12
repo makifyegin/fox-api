@@ -6,7 +6,7 @@ module Api
     class ProfileController < ApplicationController
       before_action :authenticate_user!
       def show
-        render json: current_user
+        render json: current_user, only: [:id, :email, :first_name, :last_name, :role, :region_id]
       end
 
     end

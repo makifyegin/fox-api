@@ -1,4 +1,4 @@
-# Fox API
+# Fox
 
 A booking system API for [Servas International](https://servas.org), enabling new applicants to schedule interviews with regional interviewers.
 

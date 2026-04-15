@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       # Routes will come here
       get "profile" => "profile#show", as: :rails_profile
-      #
+      resources :availabilities, only: [:index, :create, :destroy]
       post "login", to: "auth#login"
       resources :countries, only: [:index], param: :code do
         resources :regions, only: [:index]

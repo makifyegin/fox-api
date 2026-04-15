@@ -14,6 +14,11 @@ module Api
         end
       end
 
+      def index
+        availabilities = current_user.availabilities
+        render json: availabilities, status: :ok
+      end
+
 
       private
       def availability_params

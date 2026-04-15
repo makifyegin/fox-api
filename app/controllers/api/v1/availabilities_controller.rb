@@ -19,6 +19,12 @@ module Api
         render json: availabilities, status: :ok
       end
 
+      def destroy
+        availability = current_user.availabilities.find(params[:id])
+        availability.destroy
+        head :no_content
+      end
+
 
       private
       def availability_params

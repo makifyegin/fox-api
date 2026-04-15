@@ -41,5 +41,17 @@ RSpec.describe 'Availabilities', type: :request do
       json = JSON.parse(response.body)
       expect(json.length).to eq(1)
     end
+
+    context 'DELETE /api/v1/availabilities/:id' do
+      it 'deletes an availability' do
+        availability = Availability.create!(user: user, date: Date.tomorrow, start_time: "10:00", end_time: "14:00")
+
+        delete "/api/v1/availabilities/#{availability.id}",
+               headers: {"Authorization" => "Bearer #{token}"}
+
+        expect(response).to have_http_status(:no_content)
+      end
+
+    end
   end
 end

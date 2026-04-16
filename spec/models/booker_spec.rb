@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Booker, type: :model do
 
-  let(:booker) { Booker.new(name: "Akif", email: "test@servas.dev", booker_type: "member") }
+  let(:booker) { build(:booker, booker_type: "member", region: nil) }
   it "valid with all fields" do
     expect(booker).to be_valid
   end
@@ -22,13 +22,26 @@ RSpec.describe Booker, type: :model do
   end
 
   it "is not valid with duplicate email" do
-    Booker.create!(name: "Other", email: "test@servas.dev", booker_type: "applicant")
+    region = create(:region)
+    Booker.create!(name: "Other", email: "john@servas.dev", booker_type: "applicant", region: region)
     expect(booker).not_to be_valid
   end
 
   it "is not valid with invalid booker_type" do
     booker.booker_type = "visitor"
     expect(booker).not_to be_valid
+  end
+
+  it "is not valid without region when applicant" do
+    booker.booker_type = "applicant"
+    booker.region = nil
+    expect(booker).not_to be_valid
+  end
+
+  it "is valid without region when member" do
+    booker.booker_type = "member"
+    booker.region = nil
+    expect(booker).to be_valid
   end
 
   # pending "add some examples to (or delete) #{__FILE__}"

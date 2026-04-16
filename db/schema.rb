@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_202945) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_205628) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -30,6 +30,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_202945) do
     t.string "email"
     t.string "name"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "bookings", force: :cascade do |t|
+    t.bigint "availability_id", null: false
+    t.bigint "booker_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "duration"
+    t.string "interview_type"
+    t.time "start_time"
+    t.string "status"
+    t.datetime "updated_at", null: false
+    t.index ["availability_id"], name: "index_bookings_on_availability_id"
+    t.index ["booker_id"], name: "index_bookings_on_booker_id"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -60,6 +73,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_202945) do
   end
 
   add_foreign_key "availabilities", "users"
+  add_foreign_key "bookings", "availabilities"
+  add_foreign_key "bookings", "bookers"
   add_foreign_key "regions", "countries"
   add_foreign_key "users", "regions"
 end

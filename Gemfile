@@ -50,6 +50,8 @@ group :development, :test do
 
   gem "jwt"
   gem "factory_bot_rails"
+  # Swagger UI Autogeneretes a visual documentation
+  gem "rswag"
 
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -8,6 +10,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Routes will come here
+      resources :regions, only: [] do
+        resources :availabilities, only: [:index], controller: 'public_availabilities'
+      end
       get "profile" => "profile#show", as: :rails_profile
       resources :availabilities, only: [:index, :create, :destroy]
       post "login", to: "auth#login"

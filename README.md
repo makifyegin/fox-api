@@ -1,4 +1,4 @@
-# Fox
+# Fox API
 
 A booking system API for [Servas International](https://servas.org), enabling new applicants to schedule interviews with regional interviewers.
 
@@ -24,7 +24,8 @@ Servas operates globally with interviewers organised by country and region. When
 - **Ruby** 3.4.5
 - **Rails** 8.1.3 (API-only mode)
 - **PostgreSQL** 17 (via Docker)
-- **RSpec** for testing
+- **RSpec** for testing (55 tests)
+- **FactoryBot** for test data
 - **JWT** for authentication
 - **bcrypt** for password encryption
 
@@ -92,19 +93,24 @@ rspec spec/requests
 
 ## API endpoints
 
-### Public endpoints
+### Public endpoints (no authentication required)
 
 | Method | URL | Description |
 |--------|-----|-------------|
-| GET | `/api/v1/countries` | List all countries |
+| GET | `/api/v1/countries` | List all 249 ISO countries |
 | GET | `/api/v1/countries/:country_code/regions` | List regions for a country |
+| GET | `/api/v1/regions/:region_id/availabilities` | View available interview slots for a region |
 | POST | `/api/v1/login` | Login and receive JWT token |
+| POST | `/api/v1/bookings` | Book an interview slot |
 
 ### Protected endpoints (require JWT token)
 
 | Method | URL | Description |
 |--------|-----|-------------|
 | GET | `/api/v1/profile` | Get current user info |
+| GET | `/api/v1/availabilities` | List my availabilities |
+| POST | `/api/v1/availabilities` | Create an availability slot |
+| DELETE | `/api/v1/availabilities/:id` | Delete an availability slot |
 
 ### Authentication
 
@@ -121,15 +127,46 @@ curl http://localhost:3000/api/v1/profile \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
+### Booking an interview
+
+```bash
+# 1. Browse available slots for a region
+curl http://localhost:3000/api/v1/regions/1/availabilities
+
+# 2. Book a slot
+curl -X POST http://localhost:3000/api/v1/bookings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "availability_id": 1,
+    "start_time": "10:00",
+    "duration": 30,
+    "interview_type": "video",
+    "name": "Your Name",
+    "email": "your@email.com",
+    "booker_type": "applicant"
+  }'
+```
+
 ## Data model
 
 ```
 Country (249 ISO 3166 countries)
   └── Region (e.g. London, Scotland)
-       └── User (interviewer or admin)
-            └── Availability (free time slots)
-                 └── Booking (applicant picks a slot)
+       ├── User (interviewer or admin)
+       │    └── Availability (free time slots)
+       │         └── Booking (applicant picks a slot)
+       └── Booker (applicant or member)
+            └── Booking
 ```
+
+### Models
+
+- **Country** — ISO 3166 countries with 2-letter codes (GB, FR, DE)
+- **Region** — geographical areas within a country, belongs to a country
+- **User** — interviewers and admins who log in, belongs to a region
+- **Availability** — time slots when an interviewer is free (date, start_time, end_time)
+- **Booker** — applicants or members who book interviews, has a type (applicant/member)
+- **Booking** — connects a booker to an availability slot (duration: 15/30 min, type: video/in_person, status: pending/confirmed/cancelled/completed/rescheduled)
 
 ## Project status
 
@@ -142,12 +179,19 @@ Country (249 ISO 3166 countries)
 - [x] Profile endpoint
 - [x] Countries API endpoint
 - [x] Regions API endpoint
-- [ ] Interviewer availability
-- [ ] Booking system
+- [x] Interviewer availability (create, list, delete)
+- [x] Booker model (applicant/member with conditional region)
+- [x] Booking model with validations
+- [x] Public availability viewing per region
+- [x] Public booking creation
+- [ ] Interviewer booking management (view/confirm/cancel)
 - [ ] Email verification for applicants
 - [ ] Waitlist
 - [ ] Rescheduling/cancellation
+- [ ] Admin endpoints
+- [ ] Swagger API documentation
 - [ ] Jitsi video call integration
+- [ ] Frontend (Next.js + coss ui)
 
 ## Contributing
 

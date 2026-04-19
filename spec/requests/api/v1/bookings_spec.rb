@@ -23,5 +23,9 @@ RSpec.describe 'Bookings', type: :request do
       json = JSON.parse(response.body)
       expect(json["status"]).to eq("pending")
     end
+
+    it 'GET /api/v1/bookings' do
+      get "/api/v1/bookings"
+    end
   end
 end

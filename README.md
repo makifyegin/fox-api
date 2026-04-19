@@ -41,7 +41,7 @@ Servas operates globally with interviewers organised by country and region. When
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/fox-api.git
+git clone https://github.com/makifyegin/fox-api.git
 cd fox-api
 
 # Install dependencies

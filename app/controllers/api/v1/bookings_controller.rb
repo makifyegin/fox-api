@@ -31,6 +31,16 @@ module Api
         bookings = Booking.where(availability_id: current_user.availabilities.ids)
         render json: bookings, status: :ok
       end
+
+      def update
+        booking = Booking.find(params[:id])
+        booking.status = params[:status]
+        if booking.save
+          render json: booking, status: :ok
+        else
+          render json: booking.errors, status: :unprocessable_entity
+        end
+      end
     end
   end
 end

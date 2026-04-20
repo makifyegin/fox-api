@@ -34,4 +34,21 @@ RSpec.describe 'Bookings', type: :request do
       expect(json.length).to eq(1)
     end
   end
+
+  context 'when interviewer wants to cancel bookgins' do
+    it 'PATCH /api/v1/bookings' do
+      booking = Booking.create!(availability: availability, booker: create(:booker, region: region), start_time: "10:00", duration: 30, interview_type: "video", status: "pending")
+      headers = {'Authorization': "Bearer #{token}"}
+      patch "/api/v1/bookings/#{booking.id}",
+            params: {
+              status: "cancelled"
+            },
+            headers: headers
+
+    expect(response).to have_http_status(:ok)
+    json = JSON.parse(response.body)
+    expect(json["status"]).to eq("cancelled")
+    end
+
+  end
 end

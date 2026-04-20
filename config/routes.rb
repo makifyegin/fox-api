@@ -10,12 +10,13 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Routes will come here
-      resources :bookings, only: [:create]
+      resources :bookings, only: [:create, :index]
       resources :regions, only: [] do
         resources :availabilities, only: [:index], controller: 'public_availabilities'
       end
       get "profile" => "profile#show", as: :rails_profile
       resources :availabilities, only: [:index, :create, :destroy]
+
       post "login", to: "auth#login"
       resources :countries, only: [:index], param: :code do
         resources :regions, only: [:index]

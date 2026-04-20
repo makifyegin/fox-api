@@ -2,6 +2,7 @@ require 'rails_helper'
 RSpec.describe Booking, type: :model do
   let(:booking) { build(:booking) }
 
+
   it "is valid with all fields" do
     expect(booking).to be_valid
   end
@@ -49,5 +50,12 @@ RSpec.describe Booking, type: :model do
   it "is not valid with invalid status" do
     booking.status = "maybe"
     expect(booking).not_to be_valid
+  end
+
+  it "is not valid with 2 bookings at the same time" do
+    availability = create(:availability)
+    first_booking = create(:booking, availability: availability, booker: create(:booker, region: availability.user.region))
+    second_booking = build(:booking, availability: availability, booker: create(:booker, email: "other@servas.dev", region: availability.user.region), start_time: first_booking.start_time)
+    expect(second_booking).not_to be_valid
   end
 end

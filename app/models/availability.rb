@@ -7,6 +7,28 @@ class Availability < ApplicationRecord
   validate :end_time_after_start_time
   validate :date_not_in_past
 
+
+  def available_slots
+    slots = []
+    current = start_time
+    while current < end_time
+      slots << current.strftime("%H:%M")
+      current += 15.minutes
+    end
+
+    # Remove booked slots
+    bookings.each do |booking|
+      booked_time = booking.start_time
+      (booking.duration / 15).times do
+        slots.delete(booked_time.strftime("%H:%M"))
+        booked_time += 15.minutes
+      end
+    end
+
+    slots
+  end
+
+
   private
 
   def end_time_after_start_time
@@ -20,5 +42,8 @@ class Availability < ApplicationRecord
     # think: what do you need to check?
     # if date is before today, add an error
   end
+
+
+
 
 end

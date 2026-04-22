@@ -52,5 +52,18 @@ RSpec.describe 'Bookings', type: :request do
 
   end
 
+  context 'when booker create an interview' do
+    it 'GET /api/v1/bookings/verify' do
+      booking = Booking.create!(availability: availability, booker: create(:booker, region: region), start_time: "10:00", duration: 30, interview_type: "video", status: "pending")
+      get "/api/v1/bookings/verify?token=#{booking.verification_token}"
+
+      expect(response).to have_http_status(:ok)
+      booking.reload
+      expect(booking.status).to eq("confirmed")
+
+
+    end
+  end
+
 
 end

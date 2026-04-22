@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :booking do
     availability
-    booker
-    start_time {"11:00"}
-    duration {30}
+    association :booker, booker_type: "member", region: nil
+    start_time { "11:00" }
+    duration { 30 }
     interview_type { "video" }
     status { "pending" }
   end

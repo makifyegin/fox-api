@@ -14,6 +14,8 @@ Rails.application.routes.draw do
       resources :regions, only: [] do
         resources :availabilities, only: [:index], controller: 'public_availabilities'
       end
+      get "bookings/verify", to: "bookings#verify"
+
       get "profile" => "profile#show", as: :rails_profile
       resources :availabilities, only: [:index, :create, :destroy]
 

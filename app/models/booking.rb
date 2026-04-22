@@ -1,4 +1,5 @@
 class Booking < ApplicationRecord
+  before_create :generate_verification_token
   belongs_to :availability
   belongs_to :booker
   validates :start_time, presence: true
@@ -17,5 +18,11 @@ class Booking < ApplicationRecord
       errors.add(:start_time, "is already booked")
     end
   end
+
+  def generate_verification_token
+    self.verification_token = SecureRandom.hex(20)
+  end
+
+
 
 end

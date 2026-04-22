@@ -21,6 +21,7 @@ module Api
         )
 
         if booking.save
+          BookingMailer.verification_email(booking).deliver_later
           render json: booking, status: :created
         else
           render json: booking.errors, status: :unprocessable_entity
@@ -41,7 +42,18 @@ module Api
           render json: booking.errors, status: :unprocessable_entity
         end
       end
-    end
+
+      def verify
+        booking = Booking.find_by(verification_token: params[:token])
+        if booking
+          booking.status = "confirmed"
+          booking.save
+          render json: booking, status: :ok
+        else
+          render json: { error: "Invalid token" }, status: :not_found
+        end
+      end
+      end
   end
 end
 

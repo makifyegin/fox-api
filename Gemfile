@@ -48,6 +48,7 @@ group :development, :test do
   gem "brakeman", require: false
   gem "dotenv-rails"
 
+  gem "haml-rails"
   gem "jwt"
   gem "factory_bot_rails"
   # Swagger UI Autogeneretes a visual documentation

@@ -3,7 +3,7 @@ FactoryBot.define do
     region
     first_name { "Akif" }
     last_name { "Test" }
-    email { "test@servas.dev" }
+    sequence(:email ){ |n| "user#{n}@servas.dev" }
     password { "password123" }
     role { "interviewer" }
   end

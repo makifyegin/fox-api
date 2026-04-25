@@ -1,1 +1,3 @@
-%h1=@region.name
+%h1= "Meet our #{@region.name} team"
+- @interviewers.each do |interviewer|
+  %p= interviewer.first_name

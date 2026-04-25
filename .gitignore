@@ -6,7 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
-
+/Learning/learning.md
 # Ignore all environment files.
 /.env*
 
@@ -32,3 +32,6 @@
 /config/*.key
 
 /.idea/
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
